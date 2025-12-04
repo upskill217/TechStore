@@ -24,6 +24,27 @@ A aplicação implementa as seguintes operações essenciais:
 7. **Repor Stock** — Adicionar unidades a um produto já existente
 8. **Operações Criativas** — Três funcionalidades adicionais implementadas (Black Friday 40% desconto, carrinho de compras e recibo formatado)
 
+
+## Como Executar o Projeto
+
+### Pré-requisitos e ferramentas
+- Git 
+- Github
+- Node.js
+- Visual Studio Code
+
+### Passos de Instalação e execução
+1. Clone o repositório:
+```bash
+git clone https://github.com/upskill217/TechStore.git
+cd TechStore
+```
+
+2. Execute o projeto:
+```bash
+node techstore.js
+```
+
 ## Fluxograma
 
 ### Função `alterarPreco(id, novoPreco)`
