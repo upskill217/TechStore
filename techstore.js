@@ -43,8 +43,7 @@ class TechStore {
         quantidadeVendida: quantidade,
         valorTotal: produto.preco * quantidade,
         DataDeVenda: formatarData(new Date("12/04/2015")),//data mm/dd/aaaa formata para dd/mm/aaaa
-      };
-      //adiciona o historico ao array de historicoVendas
+      };//adiciona o historico ao array de historicoVendas
       this.historicoVendas.push(historico);
     }
   };
@@ -82,8 +81,7 @@ class TechStore {
         //atualiza o produto mais caro
         produtoMaisCaro = produto;
       }
-    }
-    //devolve o produto mais caro
+    }//devolve o produto mais caro
     return produtoMaisCaro;
   };
 
@@ -118,8 +116,6 @@ function formatarData(data) {
 //Caça ao Bug (Simulação): Implementem propositadamente um erro de lógica no vosso código.
 //Adicionem um comentário a explicar o impacto desse erro no negócio
 //e mostrem (com print ou comentário) como usaram o Debugger para o detetar e corrigir.
-
-
 function main() {
 
   console.log("\n--- SIMULAÇÃO ---");
