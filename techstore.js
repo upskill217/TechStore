@@ -119,11 +119,16 @@ class TechStore {
     //cria uma nova lista com produtos já com descontos, sem alterar a lista original preco com 2 casas decimais
     const produtosComDescontos = this.produtos
       .filter((p) => p.nome)
-      .map((p) => ({nome: p.nome,precoComDesconto: (p.preco * (1 - percentagem)).toFixed(2)}));
+      .map((p) => ({
+        nome: p.nome,
+        preco: p.preco,
+        precoComDesconto: (p.preco * (1 - percentagem)).toFixed(2),
+        stock: p.stock,
+      }));
     return produtosComDescontos;
   };
 }
-  //função para formatar data no fromato dd/mm/aaaa
+//função para formatar data no fromato dd/mm/aaaa
 function formatarData(data) {
   const dia = String(data.getDate()).padStart(2, "0");
   const mes = String(data.getMonth() + 1).padStart(2, "0");
