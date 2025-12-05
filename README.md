@@ -293,16 +293,16 @@ produtos = [
     ![break point 1](screenshots/break_point_3.png)
 5. **Antes da Remoção -> Solução Implementada**
    ![break point 1](screenshots/break_point_4.png)
-6. **Antes da Remoção -> Solução Implementada**
-7. ![break point 1](screenshots/break_point_5.png)
-8. **Teste prático**:
+6. **Depois da Remoção -> Solução Implementada**
+   ![break point 1](screenshots/break_point_5.png)
+7. **Teste prático**:
    ```javascript
    console.log("Antes:", techStore.produtos.length);
    techStore.limpezaDoStock();
    console.log("Depois:", techStore.produtos.length);
    techStore.produtos.forEach(p => console.log(`${p.nome}: stock=${p.stock}`));
    ```
-9.  **Verificar**: Nenhum produto com `stock=0` deve permanecer no array.
+8.  **Verificar**: Nenhum produto com `stock=0` deve permanecer no array.
 
 ## Fluxogramas
 ### Função `alterarPreco(id, novoPreco)`
