@@ -21,7 +21,7 @@ class TechStore {
   alterarPreco = function (id, novoPreco) {
     //procura o produto pelo id
     let produto = this.produtos.find((p) => p.id === id);
-    //se houver produto 
+    //se houver produto
     if (produto) {
       //altera o preco do produto
       produto.preco = novoPreco;
@@ -42,16 +42,21 @@ class TechStore {
         preco: produto.preco,
         quantidadeVendida: quantidade,
         valorTotal: produto.preco * quantidade,
-        DataDeVenda: formatarData(new Date("12/04/2015")),//data mm/dd/aaaa formata para dd/mm/aaaa
-      };//adiciona o historico ao array de historicoVendas
+        DataDeVenda: formatarData(new Date("12/04/2015")), //data mm/dd/aaaa formata para dd/mm/aaaa
+      }; //adiciona o historico ao array de historicoVendas
       this.historicoVendas.push(historico);
     }
+    //retorna o produto vendido
+    return produto;
   };
 
   /* Valor Total do Inventário: Calcular quanto dinheiro está investido em stock */
   valorTotalDeInventario = function () {
     //calcula a soma total do stock * preco de todos os produtos
-    let somaTotal = this.produtos.reduce((acc, p) => acc + (p.stock * p.preco), 0);
+    let somaTotal = this.produtos.reduce(
+      (acc, p) => acc + p.stock * p.preco,
+      0
+    );
     //devolve a soma total
     return somaTotal;
   };
@@ -81,7 +86,7 @@ class TechStore {
         //atualiza o produto mais caro
         produtoMaisCaro = produto;
       }
-    }//devolve o produto mais caro
+    } //devolve o produto mais caro
     return produtoMaisCaro;
   };
 
@@ -99,9 +104,24 @@ class TechStore {
   /* Filtro de Categoria: Listar apenas os produtos de uma categoria específica. */
   filtrarCategoria = function (categoria) {
     // filtra os produtos pela categoria
-    const produtosPelaCategoria = this.produtos.filter((p) => p.categoria === categoria);
+    const produtosPelaCategoria = this.produtos.filter(
+      (p) => p.categoria === categoria
+    );
     // devolve os produtos da categoria
     return produtosPelaCategoria;
+  };
+
+  //Criatividade: Definam e implementem 3 operações adicionais úteis.
+  //1. BlackFridayDesconto em tudo!
+  descontoBlackFriday = function () {
+    //percentagem de 40% de desconto
+    const percentagem = 0.4;
+    //cria uma nova lista com produtos já com descontos, sem alterar a lista original
+    const produtosComDescontos = this.produtos
+      .filter((p) => p.nome)
+      .map((p) => p.preco - p.preco * percentagem )
+
+    return produtosComDescontos;
   };
 }
 
@@ -117,7 +137,6 @@ function formatarData(data) {
 //Adicionem um comentário a explicar o impacto desse erro no negócio
 //e mostrem (com print ou comentário) como usaram o Debugger para o detetar e corrigir.
 function main() {
-
   console.log("\n--- SIMULAÇÃO ---");
 
   const techStore = new TechStore("--- TECH STORE ---");
@@ -133,31 +152,33 @@ function main() {
     new Produto(9, "iPhone 15", 499.99, 1, "Telemovéis"),
   ];
 
-  console.log(techStore.produtos);
+  console.log("\ttodos os produtos");
+  console.table(techStore.produtos);
 
   console.log("\nalterar preco");
   techStore.alterarPreco(2, 53.23);
-  console.log(techStore.produtos);
+  console.table(techStore.produtos[1]);
 
-  console.log("\nregistar vendas")
+  console.log("\nregistar vendas");
   techStore.registarVenda(2, 3);
-  console.log(techStore.produtos)
+  console.table(techStore.produtos);
 
   console.log("\nHistorico de Vendas");
-  console.log(techStore.historicoVendas);
+  console.table(techStore.historicoVendas);
 
   console.log("\nLimpeza do stock");
   techStore.limpezaDoStock();
-  console.log(techStore.produtos);
+  console.table(techStore.produtos);
 
   let valorInventario = techStore.valorTotalDeInventario();
   console.log(`Valor do inventário: ${valorInventario.toFixed(2)} EUR`);
 
   console.log("\nProduto Premium");
-  console.log(techStore.produtoPremium());
+  console.table(techStore.produtoPremium());
 
+  console.log("\nBlack Friday 40%");
+  console.table(techStore.descontoBlackFriday());
 }
-
 //Executa a simulação
 main();
 
