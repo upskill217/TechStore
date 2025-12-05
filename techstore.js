@@ -225,7 +225,7 @@ function main() {
   console.table(techStore.produtos);
 
   console.log("\nValor Total do Inventário antes do Black Friday");
-  console.log(techStore.valorTotalDeInventario().toFixed(2));
+  console.log("VALOR TOTAL: ", techStore.valorTotalDeInventario().toFixed(2));
 
   console.log("\nProduto Premium");
   console.table(techStore.produtoPremium());
@@ -255,7 +255,7 @@ function main() {
   console.table(techStore.produtos);
 
   console.log("\nValor Total do Inventário após o Black Friday");
-  console.log(techStore.valorTotalDeInventario().toFixed(2));
+  console.log("VALOR TOTAL: ", techStore.valorTotalDeInventario().toFixed(2));
 
   console.log("\nLista de Produtos em Desconto");
   console.table(techStore.listarProdutosEmDesconto());
