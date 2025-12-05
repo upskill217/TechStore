@@ -116,11 +116,10 @@ class TechStore {
   descontoBlackFriday = function () {
     //percentagem de 40% de desconto
     const percentagem = 0.4;
-    //cria uma nova lista com produtos já com descontos, sem alterar a lista original
+    //cria uma nova lista com produtos já com descontos, sem alterar a lista original preco com 2 casas decimais
     const produtosComDescontos = this.produtos
       .filter((p) => p.nome)
-      .map((p) => p.preco - p.preco * percentagem )
-
+      .map((p) => ({nome: p.nome,precoComDesconto: (p.preco * (1 - percentagem)).toFixed(2)}));
     return produtosComDescontos;
   };
 }
