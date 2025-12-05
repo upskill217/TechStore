@@ -26,6 +26,8 @@ class TechStore {
       //altera o preco do produto
       produto.preco = novoPreco;
     }
+    //retorna o produto com o preco atualizado
+    return produto;
   };
 
   /* Registar Venda: Diminuir o stock E registar a transação no Histórico de Vendas */
@@ -99,6 +101,8 @@ class TechStore {
       //adiciona o novo stock ao stock existente
       produto.stock += novoStock;
     }
+    //retorna o produto com o stock atualizado
+    return produto;
   };
 
   /* Filtro de Categoria: Listar apenas os produtos de uma categoria específica. */
@@ -154,17 +158,14 @@ function main() {
     new Produto(8, "iPhone 16", 799.99, 4, "Telemovéis"),
     new Produto(9, "iPhone 15", 499.99, 1, "Telemovéis"),
   ];
-
-  console.log("\ttodos os produtos");
+  console.log("\nLista de todos os Produtos");
   console.table(techStore.produtos);
 
   console.log("\nalterar preco");
-  techStore.alterarPreco(2, 53.23);
-  console.table(techStore.produtos[1]);
+  console.table( techStore.alterarPreco(2, 53.23));
 
   console.log("\nregistar vendas");
-  techStore.registarVenda(2, 3);
-  console.table(techStore.produtos);
+  console.table(  techStore.registarVenda(2, 3));
 
   console.log("\nHistorico de Vendas");
   console.table(techStore.historicoVendas);
