@@ -44,7 +44,7 @@ class TechStore {
         quantVendida: quantidade,
         desconto: produto.desconto ? "40%" : "N/A",
         valorTotal: (produto.preco * quantidade).toFixed(2),
-        DataDeVenda: formatarData(new Date("12/04/2015")), //data mm/dd/aaaa formata para dd/mm/aaaa
+        DataDeVenda: formatarData(new Date(Date.now())), //data mm/dd/aaaa formata para dd/mm/aaaa
       }; //adiciona o historico ao array de historicoVendas
       this.historicoVendas.push(historico);
     }
@@ -129,12 +129,59 @@ class TechStore {
     }
   };
 
+  /* Listar Produtos em Desconto: Listar todos os produtos que estão com desconto. */
+  listarProdutosEmDesconto = function () {
+    return this.produtos.filter((p) => p.desconto);
+  };
+
+  /* Relatório de Vendas Diárias: Gerar um relatório formatado das vendas do dia. */
+  relatorio = function () {
+    //se não houver vendas
+    if (this.historicoVendas.length === 0) {
+      //retorna mensagem de nenhuma venda registrada
+      return "Nenhuma venda registrada.";
+    }
+    //para repetir o separador '=' em 70 vezes
+    let linha = `${"=".repeat(70)}\n`
+    /* \t-> tabulação e \n -> nova linha */
+    linha += `\t\t--- RELATÓRIO DE VENDAS DIARIA ---\n`;
+    linha += `${"=".repeat(70)}\n`;
+    linha += `${this.nome}`;
+    linha += `\t\t\t Data do Relatório: ${formatarData(new Date(Date.now()))}\n`;
+    linha += `${"=".repeat(70)}\n`;
+    linha += `Produto                           │  Qtde  │    Preço    │ Valor Total\n`;
+    linha += `${"=".repeat(70)}\n`;
+    //agrupar vendas por produto
+    const vendasAgrupadas = {};
+    //percorrer o historico de vendas
+    this.historicoVendas.forEach((venda) => {
+      //se o produto já foi vendido antes
+      if (vendasAgrupadas[venda.id]) {
+        //atualiza a quantidade vendida e o valor total
+        vendasAgrupadas[venda.id].quantVendida += venda.quantVendida;
+        //soma ao valor total das vendas anteriores
+        vendasAgrupadas[venda.id].valorTotal = (parseFloat(vendasAgrupadas[venda.id].valorTotal) + parseFloat(venda.valorTotal)).toFixed(2);
+      } //se for a primeira venda desse produto
+      else {
+        //adiciona a nova venda ao objeto de vendas agrupadas
+        vendasAgrupadas[venda.id] = { ...venda };
+      }
+    });
+    Object.values(vendasAgrupadas).forEach((venda) => {
+      linha += `├─ ${venda.produto.padEnd(30)} │ ${venda.quantVendida.toString().padStart(3)} un │ ${venda.preco.padStart(10)}€ │ ${venda.valorTotal.padStart(10)}€\n`;
+    });
+    linha += `${"=".repeat(70)}\n`;
+    linha += `TOTAL ${"\t".repeat(7)}      ${this.historicoVendas.
+      reduce((sum, v) => sum + parseFloat(v.valorTotal), 0).toFixed(2)}€\n`;
+    linha += `${"=".repeat(70)}\n`;
+    return linha;
+  };
 }
 
 //função para formatar data no fromato dd/mm/aaaa
 function formatarData(data) {
-  const dia = data.getDate();
-  const mes = data.getMonth() + 1;
+  const dia = String(data.getDate()).padStart(2, '0');
+  const mes = String(data.getMonth() + 1).padStart(2, '0');
   const ano = data.getFullYear();
   return `${dia}/${mes}/${ano}`;
 }
@@ -143,7 +190,7 @@ function formatarData(data) {
 //Adicionem um comentário a explicar o impacto desse erro no negócio
 //e mostrem (com print ou comentário) como usaram o Debugger para o detetar e corrigir.
 function main() {
-  console.log("\n--- SIMULAÇÃO ---");
+  console.log("\n\t\t\t--- SIMULAÇÃO ---");
 
   const techStore = new TechStore("--- TECH STORE ---");
   techStore.produtos = [
@@ -199,9 +246,6 @@ function main() {
   console.log("\nHistorico de Vendas já com os descontos aplicados do Black Friday");
   console.table(techStore.historicoVendas);
 
-  console.log("\nFatura das Vendas do Black Friday");
-console.log(techStore.gerarFatura());
-
   console.log("\nReposição de Stock após o Black Friday");
   console.table(techStore.reporStock(1, 7));
   console.table(techStore.reporStock(9, 3));
@@ -212,6 +256,17 @@ console.log(techStore.gerarFatura());
 
   console.log("\nValor Total do Inventário após o Black Friday");
   console.log(techStore.valorTotalDeInventario().toFixed(2));
+
+  console.log("\nLista de Produtos em Desconto");
+  console.table(techStore.listarProdutosEmDesconto());
+
+  console.log("\nFiltro de Categoria: Telemóveis");
+  console.table(techStore.filtrarCategoria("Telemovéis"));
+
+  console.log("\nRelatório de Vendas do Dia");
+  console.log(techStore.relatorio());
+
+  console.log("\t\t\t--- FIM DA SIMULAÇÃO ---\n");
 }
 
 //Executa a simulação
