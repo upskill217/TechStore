@@ -6,6 +6,7 @@ class Produto {
     this.preco = preco;
     this.stock = stock;
     this.categoria = categoria;
+    this.desconto = false;
   }
 }
 
@@ -20,13 +21,10 @@ class TechStore {
   /* Atualizar Preço: Alterar o preço de um produto específico através do seu identificador. */
   alterarPreco = function (id, novoPreco) {
     //procura o produto pelo id
-    let produto = this.produtos.find((p) => p.id === id);
-    //se houver produto
-    if (produto) {
-      //altera o preco do produto
-      produto.preco = novoPreco;
-    }
-    //retorna o produto com o preco atualizado
+    const produto = this.produtos.find((p) => p.id === id);
+    //atualiza o preço do produto
+    produto.preco = novoPreco;
+    //retorna o produto com o preço atualizado
     return produto;
   };
 
@@ -40,10 +38,12 @@ class TechStore {
       produto.stock -= quantidade;
       //cria o objeto historico com os dados da venda
       const historico = {
+        id: produto.id,
         produto: produto.nome,
-        preco: produto.preco,
-        quantidadeVendida: quantidade,
-        valorTotal: produto.preco * quantidade,
+        preco: (produto.preco).toFixed(2),
+        quantVendida: quantidade,
+        desconto: produto.desconto ? "40%" : "N/A",
+        valorTotal: (produto.preco * quantidade).toFixed(2),
         DataDeVenda: formatarData(new Date("12/04/2015")), //data mm/dd/aaaa formata para dd/mm/aaaa
       }; //adiciona o historico ao array de historicoVendas
       this.historicoVendas.push(historico);
@@ -118,24 +118,23 @@ class TechStore {
   //Criatividade: Definam e implementem 3 operações adicionais úteis.
   //1. BlackFridayDesconto em tudo!
   descontoBlackFriday = function () {
-    //percentagem de 40% de desconto
-    const percentagem = 0.4;
-    //cria uma nova lista com produtos já com descontos, sem alterar a lista original preco com 2 casas decimais
-    const produtosComDescontos = this.produtos
-      .filter((p) => p.nome)
-      .map((p) => ({
-        nome: p.nome,
-        preco: p.preco,
-        precoComDesconto: (p.preco * (1 - percentagem)).toFixed(2),
-        stock: p.stock,
-      }));
-    return produtosComDescontos;
+    //aplica 40% de desconto a todos os produtos
+    for (let produto of this.produtos) {
+      //60% do preço original
+      const novoPreco = produto.preco * 0.6;
+      //marca o produto como em desconto
+      produto.desconto = true;
+      //atualiza o preço do produto
+      this.alterarPreco(produto.id, novoPreco);
+    }
   };
+
 }
+
 //função para formatar data no fromato dd/mm/aaaa
 function formatarData(data) {
-  const dia = String(data.getDate()).padStart(2, "0");
-  const mes = String(data.getMonth() + 1).padStart(2, "0");
+  const dia = data.getDate();
+  const mes = data.getMonth() + 1;
   const ano = data.getFullYear();
   return `${dia}/${mes}/${ano}`;
 }
@@ -162,83 +161,58 @@ function main() {
   console.table(techStore.produtos);
 
   console.log("\nalterar preco");
-  console.table( techStore.alterarPreco(2, 53.23));
+  console.table(techStore.alterarPreco(2, 133.23));
 
-  console.log("\nregistar vendas");
-  console.table(  techStore.registarVenda(2, 3));
+  console.log("\nregistar vendas antes do Black Friday");
+  console.table(techStore.registarVenda(2, 3));
+  console.table(techStore.registarVenda(5, 3));
+  console.table(techStore.registarVenda(4, 8));
+  console.table(techStore.registarVenda(1, 1));
 
-  console.log("\nHistorico de Vendas");
-  console.table(techStore.historicoVendas);
+  console.log("\nReposição de Stock");
+  console.table(techStore.reporStock(3, 5));
+  console.table(techStore.reporStock(9, 2));
 
   console.log("\nLimpeza do stock");
   techStore.limpezaDoStock();
   console.table(techStore.produtos);
 
-  let valorInventario = techStore.valorTotalDeInventario();
-  console.log(`Valor do inventário: ${valorInventario.toFixed(2)} EUR`);
+  console.log("\nValor Total do Inventário antes do Black Friday");
+  console.log(techStore.valorTotalDeInventario().toFixed(2));
 
   console.log("\nProduto Premium");
   console.table(techStore.produtoPremium());
 
   console.log("\nBlack Friday 40%");
-  console.table(techStore.descontoBlackFriday());
+  techStore.descontoBlackFriday();
+  console.table(techStore.produtos);
+
+  console.log("\nProdutos vendidos no Black Friday 40%");
+  console.table(techStore.registarVenda(9, 8));
+  console.table(techStore.registarVenda(7, 1));
+  console.table(techStore.registarVenda(1, 2));
+  console.table(techStore.registarVenda(3, 6));
+  console.table(techStore.registarVenda(5, 2));
+  console.table(techStore.registarVenda(8, 4));
+  console.table(techStore.registarVenda(6, 4));
+
+  console.log("\nHistorico de Vendas já com os descontos aplicados do Black Friday");
+  console.table(techStore.historicoVendas);
+
+  console.log("\nFatura das Vendas do Black Friday");
+console.log(techStore.gerarFatura());
+
+  console.log("\nReposição de Stock após o Black Friday");
+  console.table(techStore.reporStock(1, 7));
+  console.table(techStore.reporStock(9, 3));
+
+  console.log("\nLimpeza do stock após o Black Friday");
+  techStore.limpezaDoStock();
+  console.table(techStore.produtos);
+
+  console.log("\nValor Total do Inventário após o Black Friday");
+  console.log(techStore.valorTotalDeInventario().toFixed(2));
 }
+
 //Executa a simulação
 main();
-
-//console.log("Categorias: ", techStore.filtrarCategoria("SmartWatch"));
-
-//Criatividade: Definam e implementem 3 operações adicionais úteis.
-//1.BlackFriday 40% Desconto em tudo!
-/*function descontoBlackFriday(produto) {
-  const percentagem = 0.4;
-  const produtoComDesconto = produto.preco - produto.preco * percentagem;
-  return produtoComDesconto;
-}
-console.log(
-  `Produto com Desconto: ${techStore[7].nome}, ${descontoBlackFriday(
-    techStore[7]
-  ).toFixed(2)} €`
-);
-
-//2.Carrinho de Compras com total para pagamento.
-const carrinho = [
-  { produto: techStore[0], quantidade: 1 },
-  { produto: techStore[3], quantidade: 2 },
-  { produto: techStore[7], quantidade: 1 },
-];
-console.log("Carrinho:", carrinho);
-
-function recibo() {
-  let totalArtigos = carrinho.reduce((acc, n) => acc + n.quantidade, 0);
-  let totalCompra = carrinho.reduce(
-    (acc, n) => acc + n.produto.preco * n.quantidade,
-    0
-  );
-  console.log(
-    `Tens ${totalArtigos} artigos. Total a pagar: ${totalCompra.toFixed(2)}€`
-  );
-}
-recibo();
-
-//3.Recibo Formatado para o cliente
-function reciboFormatado() {
-  console.log("====== TechStore!  ======");
-  console.log("A sua tech shop favorita!");
-  let totalCompra = 0;
-
-  carrinho.forEach((item) => {
-    const nome = item.produto.nome;
-    const qtd = item.quantidade;
-    const preco = item.produto.preco;
-    const subtotal = preco * qtd;
-    totalCompra += subtotal;
-
-    console.log(`${nome} (x${qtd})......` + `${subtotal.toFixed(2)}€`);
-  });
-  console.log(`-------------------------------------`);
-  console.log(`TOTAL: ${totalCompra.toFixed(2)}€`);
-  console.log("-------------------------------------");
-  console.log("Conserve o talão para caso de troca");
-  console.log("ou avaria. Obrigado pela preferência!");
-}*/
