@@ -104,8 +104,7 @@ class TechStore {
     return produtosPelaCategoria;
   };
 }
-
-//função para formatar data no fromato dd/mm/aaaa
+  //função para formatar data no fromato dd/mm/aaaa
 function formatarData(data) {
   const dia = String(data.getDate()).padStart(2, "0");
   const mes = String(data.getMonth() + 1).padStart(2, "0");
